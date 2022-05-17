@@ -16,7 +16,7 @@ export const useAuth = () => {
 
 function useProvideAuth() {
   const [user, setUser] = useState(null);
-  const [error, setError]=useState();
+  const [error, setError] = useState();
 
   const signIn = async (email, password) => {
     const options = {
@@ -25,11 +25,15 @@ function useProvideAuth() {
         'Content-Type': 'application/json',
       },
     };
-    const { data: access_token } = await axios.post(endPoints.auth.login, 
-        { email, password }, options);
-        
+    const { data: access_token } = await axios.post(endPoints.auth.login, { email, password }, options);
+
     if (access_token) {
-      Cookie.set('token', access_token.access_token, { expires: 5 });
+      const token = access_token.access_token;
+      Cookie.set('token', token, { expires: 5 });
+      
+      axios.defaults.headers.Authorization = `Bearer ${token}`;
+      const { data: user } = await axios.get(endPoints.auth.profile);
+      setUser(user);
     }
   };
 
