@@ -16,11 +16,9 @@ export default function LoginPage() {
 
     auth.signIn(email, password).then(
       () => {
-        console.log('Login success');
         router.push('/dashboard');
       },
       (reason) => {
-        console.log('Login Failed');
         console.error(reason);
         auth.setError('Invalid Username or Password');
       }
